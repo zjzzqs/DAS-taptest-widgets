@@ -14,16 +14,16 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 params = {
-    'image.interpolation': 'nearest',
-    'image.cmap': 'gray',
-    'savefig.dpi': 300,  # to adjust notebook inline plot size
-    'axes.labelsize': 12,  # fontsize for x and y labels (was 10)
-    'axes.titlesize': 12,
-    'font.size': 12,
-    'legend.fontsize': 12,
-    'xtick.labelsize': 12,
-    'ytick.labelsize': 12,
-    'text.usetex': False,
+    "image.interpolation": "nearest",
+    "image.cmap": "gray",
+    "savefig.dpi": 300,  # to adjust notebook inline plot size
+    "axes.labelsize": 12,  # fontsize for x and y labels (was 10)
+    "axes.titlesize": 12,
+    "font.size": 12,
+    "legend.fontsize": 12,
+    "xtick.labelsize": 12,
+    "ytick.labelsize": 12,
+    "text.usetex": False,
 }
 matplotlib.rcParams.update(params)
 
@@ -124,12 +124,12 @@ def make_remote_request(url: str, params: dict):
         try:
             response = requests.get((url + urllib.parse.urlencode(params)))
         except (OSError, urllib3.exceptions.ProtocolError) as error:
-            print('\n')
-            print('*' * 20, 'Error Occured', '*' * 20)
-            print(f'Number of tries: {count}')
-            print(f'URL: {url}')
+            print("\n")
+            print("*" * 20, "Error Occured", "*" * 20)
+            print(f"Number of tries: {count}")
+            print(f"URL: {url}")
             print(error)
-            print('\n')
+            print("\n")
             count += 1
             continue
         break
@@ -138,11 +138,11 @@ def make_remote_request(url: str, params: dict):
 
 
 def elevation_function(lat, lon):
-    url = 'https://nationalmap.gov/epqs/pqs.php?'
-    params = {'x': lon, 'y': lat, 'units': 'Meters', 'output': 'json'}
+    url = "https://nationalmap.gov/epqs/pqs.php?"
+    params = {"x": lon, "y": lat, "units": "Meters", "output": "json"}
     result = make_remote_request(url, params)
-    return result.json()['USGS_Elevation_Point_Query_Service']['Elevation_Query'][
-        'Elevation'
+    return result.json()["USGS_Elevation_Point_Query_Service"]["Elevation_Query"][
+        "Elevation"
     ]
 
 
@@ -165,7 +165,7 @@ class badchnnlwdgt(widgets.VBox):
         self.tAx = np.linspace(0.0, (self.nt - 1) * self.dt, self.nt)
         # Initial plot interval
         self.min_t = min_time
-        self.max_t = self.min_t + (self.nt - 1) * self.dt # 100.0
+        self.max_t = self.min_t + (self.nt - 1) * self.dt  # 100.0
         self.it_min = int(self.min_t / self.dt + 0.5)
         self.it_max = min(self.nt - 1, int(self.max_t / self.dt + 0.5))
         self.min_ch = 0
@@ -182,7 +182,7 @@ class badchnnlwdgt(widgets.VBox):
         # Creating the initial data plot
         with output:
             self.fig, (self.ax1, self.ax2, self.ax3) = plt.subplots(
-                3, 1, figsize=(20, 10), gridspec_kw={'height_ratios': [0.3, 3, 0.3]}
+                3, 1, figsize=(12, 10), gridspec_kw={"height_ratios": [0.3, 3, 0.3]}
             )
         self.im = self.ax2.imshow(
             self.data[self.min_ch : self.max_ch, self.it_min : self.it_max].T,
@@ -192,10 +192,10 @@ class badchnnlwdgt(widgets.VBox):
                 self.tAx[self.it_max],
                 self.tAx[self.it_min],
             ],
-            aspect='auto',
+            aspect="auto",
             vmin=-clipVal,
             vmax=clipVal,
-            cmap=plt.get_cmap('seismic'),
+            cmap=plt.get_cmap("seismic"),
         )
         self.ax2.set_ylabel("Time [s]")
         self.ax2.set_xlabel("Channel number")
@@ -204,7 +204,7 @@ class badchnnlwdgt(widgets.VBox):
         divider = make_axes_locatable(self.ax2)
         cax = divider.append_axes("bottom", size="2%", pad=0.7)
         cbar = plt.colorbar(self.im, orientation="horizontal", cax=cax)
-        cbar.set_label('Amplitude')
+        cbar.set_label("Amplitude")
 
         # Energy sum
         energy = np.sum(
@@ -213,7 +213,7 @@ class badchnnlwdgt(widgets.VBox):
         (self.line_en,) = self.ax1.plot(
             range(self.min_ch, self.max_ch), energy / (energy.max() + 1e-18), lw=3
         )
-        self.ax1.autoscale(enable=True, axis='x', tight=True)
+        self.ax1.autoscale(enable=True, axis="x", tight=True)
         self.ax1.set_xlabel("channel number")
         self.ax1.set_ylabel("Normalized \n Energy")
         self.ax1.grid()
@@ -223,20 +223,20 @@ class badchnnlwdgt(widgets.VBox):
         (self.line_ch,) = self.ax3.plot(
             range(self.min_ch, self.max_ch),
             [0.0] * len(range(self.min_ch, self.max_ch)),
-            'o',
+            "o",
         )
-        (self.line_bad_ch,) = self.ax3.plot([], [], 'ro')
+        (self.line_bad_ch,) = self.ax3.plot([], [], "ro")
         self.ax3.get_yaxis().set_visible(False)
-        self.ax3.autoscale(enable=True, axis='x', tight=True)
+        self.ax3.autoscale(enable=True, axis="x", tight=True)
         self.ax3.grid()
         self.ax3.set_xlabel("channel number")
 
         show_bad_ch = widgets.Checkbox(
-            value=True, description='Show bad channels', disabled=False, indent=False
+            value=True, description="Show bad channels", disabled=False, indent=False
         )
 
         bad_channels_wdg = widgets.Textarea(
-            value='', description='bad channels', continuous_update=False
+            value="", description="bad channels", continuous_update=False
         )
 
         min_ch_wdg = widgets.IntSlider(
@@ -244,7 +244,7 @@ class badchnnlwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='min channel',
+            description="min channel",
             continuous_update=False,
         )
 
@@ -253,7 +253,7 @@ class badchnnlwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='max channel',
+            description="max channel",
             continuous_update=False,
         )
 
@@ -262,7 +262,7 @@ class badchnnlwdgt(widgets.VBox):
             min=self.tAx[0],
             max=self.tAx[-1],
             step=0.5,
-            description='min time [s]',
+            description="min time [s]",
             continuous_update=False,
         )
 
@@ -271,7 +271,7 @@ class badchnnlwdgt(widgets.VBox):
             min=self.tAx[0],
             max=self.tAx[-1],
             step=0.5,
-            description='max time [s]',
+            description="max time [s]",
             continuous_update=False,
         )
 
@@ -280,12 +280,12 @@ class badchnnlwdgt(widgets.VBox):
         time_sliders = widgets.HBox([min_time_wdg, max_time_wdg])
         controls = widgets.VBox([bad_ch_check, ch_sliders, time_sliders])
 
-        show_bad_ch.observe(self.update_show_bad, 'value')
-        bad_channels_wdg.observe(self.update_plot_chan, 'value')
-        min_ch_wdg.observe(self.update_min_ch, 'value')
-        max_ch_wdg.observe(self.update_max_ch, 'value')
-        min_time_wdg.observe(self.update_min_time, 'value')
-        max_time_wdg.observe(self.update_max_time, 'value')
+        show_bad_ch.observe(self.update_show_bad, "value")
+        bad_channels_wdg.observe(self.update_plot_chan, "value")
+        min_ch_wdg.observe(self.update_min_ch, "value")
+        max_ch_wdg.observe(self.update_max_ch, "value")
+        min_time_wdg.observe(self.update_min_time, "value")
+        max_time_wdg.observe(self.update_max_time, "value")
 
         # add to children
         self.children = [output, controls]
@@ -503,7 +503,7 @@ class taptestwdgt(widgets.VBox):
         self.tAx = np.linspace(0.0, (self.nt - 1) * self.dt, self.nt)
         # Initial plot interval
         self.min_t = min_time
-        self.max_t = self.min_t + (self.nt - 1) * self.dt # 100.0
+        self.max_t = self.min_t + (self.nt - 1) * self.dt  # 100.0
         self.it_min = int(self.min_t / self.dt + 0.5)
         self.it_max = int(self.max_t / self.dt + 0.5)
         self.min_ch = 0
@@ -519,7 +519,7 @@ class taptestwdgt(widgets.VBox):
         )
         self.gps_ch = gps_dist / dch
         # Interpolating to fine time sampling
-        f_ch = interp1d(self.gps_time, self.gps_ch, kind='linear', bounds_error=False)
+        f_ch = interp1d(self.gps_time, self.gps_ch, kind="linear", bounds_error=False)
         ntFine = int((self.gps_time[-1] - self.gps_time[0]) / 0.1) + 1
         self.gps_time_int = np.linspace(self.gps_time[0], self.gps_time[-1], ntFine)
         self.chAxTap = f_ch(self.gps_time_int)
@@ -541,18 +541,18 @@ class taptestwdgt(widgets.VBox):
         self.gps_lon = gps_lon
         # Function to interpolate positions based on GPS times
         self.f_lat = interp1d(
-            self.gps_time, self.gps_lat, kind='linear', bounds_error=False
+            self.gps_time, self.gps_lat, kind="linear", bounds_error=False
         )
         self.f_lon = interp1d(
-            self.gps_time, self.gps_lon, kind='linear', bounds_error=False
+            self.gps_time, self.gps_lon, kind="linear", bounds_error=False
         )
         # Creating the initial data plot
         with output:
             self.fig, (self.ax0, self.ax1, self.ax2, self.ax3) = plt.subplots(
                 4,
                 1,
-                figsize=(12, 30),#figsize=(9, 15),
-                gridspec_kw={'height_ratios': [1, 0.2, 5, 0.2]},
+                figsize=(12, 30),
+                gridspec_kw={"height_ratios": [1, 0.2, 5, 0.2]},
             )
         self.im = self.ax2.imshow(
             self.data[:, self.it_min : self.it_max].T,
@@ -562,10 +562,10 @@ class taptestwdgt(widgets.VBox):
                 self.tAx[self.it_max],
                 self.tAx[self.it_min],
             ],
-            aspect='auto',
+            aspect="auto",
             vmin=vmin,
             vmax=vmax,
-            cmap=plt.get_cmap('seismic'),
+            cmap=plt.get_cmap("seismic"),
         )
         # Plotting tap test line
         mask_ln_tap = (self.chAxTap + self.shift >= self.min_ch) * (
@@ -588,7 +588,7 @@ class taptestwdgt(widgets.VBox):
         divider = make_axes_locatable(self.ax2)
         cax = divider.append_axes("bottom", size="2%", pad=0.7)
         cbar = plt.colorbar(self.im, orientation="horizontal", cax=cax)
-        cbar.set_label('Amplitude')
+        cbar.set_label("Amplitude")
 
         # Energy sum
         energy = np.sum(
@@ -597,7 +597,7 @@ class taptestwdgt(widgets.VBox):
         (self.line_en,) = self.ax1.plot(
             range(self.min_ch, self.max_ch), energy / (energy.max() + 1e-18), lw=3
         )
-        self.ax1.autoscale(enable=True, axis='x', tight=True)
+        self.ax1.autoscale(enable=True, axis="x", tight=True)
         self.ax1.set_xlabel("channel number")
         self.ax1.set_ylabel("Normalized \n Energy")
         self.ax1.grid()
@@ -607,17 +607,17 @@ class taptestwdgt(widgets.VBox):
         (self.line_ch,) = self.ax3.plot(
             range(self.min_ch, self.max_ch),
             [0.0] * len(range(self.min_ch, self.max_ch)),
-            'o',
+            "o",
         )
-        (self.line_bad_ch,) = self.ax3.plot([], [], 'ro')
-        (self.line_mapped,) = self.ax3.plot([], [], 'go')
+        (self.line_bad_ch,) = self.ax3.plot([], [], "ro")
+        (self.line_mapped,) = self.ax3.plot([], [], "go")
         self.ax3.get_yaxis().set_visible(False)
-        self.ax3.autoscale(enable=True, axis='x', tight=True)
+        self.ax3.autoscale(enable=True, axis="x", tight=True)
         self.ax3.grid()
         self.ax3.set_xlabel("channel number")
 
         # Mapped channels
-        (self.scat_ch,) = self.ax0.plot([], [], 'go')
+        (self.scat_ch,) = self.ax0.plot([], [], "go")
         self.ann = []
         minLat = np.amin(gps_lat)
         maxLat = np.amax(gps_lat)
@@ -632,11 +632,11 @@ class taptestwdgt(widgets.VBox):
         # Bad-channel widgets
 
         show_bad_ch = widgets.Checkbox(
-            value=True, description='Show bad channels', disabled=False, indent=False
+            value=True, description="Show bad channels", disabled=False, indent=False
         )
 
         bad_channels_wdg = widgets.Textarea(
-            value='', description='bad channels', continuous_update=False
+            value="", description="bad channels", continuous_update=False
         )
 
         # Display limit widgets
@@ -646,7 +646,7 @@ class taptestwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='min channel',
+            description="min channel",
             continuous_update=False,
         )
 
@@ -655,7 +655,7 @@ class taptestwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='max channel',
+            description="max channel",
             continuous_update=False,
         )
 
@@ -664,7 +664,7 @@ class taptestwdgt(widgets.VBox):
             min=self.tAx[0],
             max=self.tAx[-1],
             step=1,
-            description='min time [s]',
+            description="min time [s]",
             continuous_update=False,
         )
 
@@ -673,7 +673,7 @@ class taptestwdgt(widgets.VBox):
             min=self.tAx[0],
             max=self.tAx[-1],
             step=1,
-            description='max time [s]',
+            description="max time [s]",
             continuous_update=False,
         )
 
@@ -684,24 +684,24 @@ class taptestwdgt(widgets.VBox):
             min=-np.amax(self.chAxTap),
             max=np.amax(self.chAxTap),
             step=0.1,
-            description='Tap-test shift:',
+            description="Tap-test shift:",
             disabled=False,
             continuous_update=False,
-            orientation='horizontal',
+            orientation="horizontal",
             readout=True,
-            readout_format='.1f',
+            readout_format=".1f",
         )
 
         show_tap_ln = widgets.Checkbox(
-            value=True, description='Show tap-test line', disabled=False, indent=False
+            value=True, description="Show tap-test line", disabled=False, indent=False
         )
 
         tap_dir_wg = widgets.ToggleButton(
             value=False,
-            description='Reverse direction',
+            description="Reverse direction",
             disabled=False,
-            button_style='',  # 'success', 'info', 'warning', 'danger' or ''
-            tooltip='Reverse tap-test direction',
+            button_style="",  # 'success', 'info', 'warning', 'danger' or ''
+            tooltip="Reverse tap-test direction",
         )
 
         # Tap-test mapping
@@ -710,7 +710,7 @@ class taptestwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='min map ch',
+            description="min map ch",
             continuous_update=False,
         )
 
@@ -719,12 +719,12 @@ class taptestwdgt(widgets.VBox):
             min=0,
             max=self.nch - 1,
             step=1,
-            description='max map ch',
+            description="max map ch",
             continuous_update=False,
         )
 
-        map_ch_wdg = widgets.Button(description='Map channels!')
-        show_mp_ch_nb = widgets.Checkbox(value=False, description='Show mapped ch #')
+        map_ch_wdg = widgets.Button(description="Map channels!")
+        show_mp_ch_nb = widgets.Checkbox(value=False, description="Show mapped ch #")
 
         bad_ch_check = widgets.HBox([bad_channels_wdg, show_bad_ch])
         ch_sliders = widgets.HBox([min_ch_wdg, max_ch_wdg])
@@ -744,19 +744,19 @@ class taptestwdgt(widgets.VBox):
         )
 
         # Functions to enable user inputs
-        show_bad_ch.observe(self.update_show_bad, 'value')
-        bad_channels_wdg.observe(self.update_plot_chan, 'value')
-        min_ch_wdg.observe(self.update_min_ch, 'value')
-        max_ch_wdg.observe(self.update_max_ch, 'value')
-        min_time_wdg.observe(self.update_min_time, 'value')
-        max_time_wdg.observe(self.update_max_time, 'value')
-        ch_shift_wdg.observe(self.update_shift, 'value')
+        show_bad_ch.observe(self.update_show_bad, "value")
+        bad_channels_wdg.observe(self.update_plot_chan, "value")
+        min_ch_wdg.observe(self.update_min_ch, "value")
+        max_ch_wdg.observe(self.update_max_ch, "value")
+        min_time_wdg.observe(self.update_min_time, "value")
+        max_time_wdg.observe(self.update_max_time, "value")
+        ch_shift_wdg.observe(self.update_shift, "value")
         show_tap_ln.observe(self.update_show_ln, "value")
         tap_dir_wg.observe(self.update_reverse_tap, "value")
-        min_ch_tap_wdg.observe(self.update_min_ch_map, 'value')
-        max_ch_tap_wdg.observe(self.update_max_ch_map, 'value')
+        min_ch_tap_wdg.observe(self.update_min_ch_map, "value")
+        max_ch_tap_wdg.observe(self.update_max_ch_map, "value")
         map_ch_wdg.on_click(self.map_channel)
-        show_mp_ch_nb.observe(self.update_show_map_ch_num, 'value')
+        show_mp_ch_nb.observe(self.update_show_map_ch_num, "value")
 
         # add to children
         self.children = [output, controls]
@@ -775,9 +775,9 @@ class taptestwdgt(widgets.VBox):
                         label,
                         xy=(x, y),
                         xytext=(-5, 5),
-                        textcoords='offset points',
-                        ha='right',
-                        va='bottom',
+                        textcoords="offset points",
+                        ha="right",
+                        va="bottom",
                     )
                 )
         if len(map_ch) > 0:
@@ -1005,7 +1005,7 @@ class taptestwdgt(widgets.VBox):
         self.update_tap_line()
 
     def update_reverse_tap(self, value):
-        self.reverse_tap = value['new']
+        self.reverse_tap = value["new"]
         self.update_tap_line()
 
     def update_min_ch_map(self, value):
@@ -1048,7 +1048,7 @@ class taptestwdgt(widgets.VBox):
         f_chTime = interp1d(
             chTap[chTapMask],
             self.gps_time_int[chTapMask],
-            kind='linear',
+            kind="linear",
             bounds_error=False,
         )
         chTapMapIdx = chTapMap.astype(int)
